@@ -1,0 +1,241 @@
+<nav [ngClass]="modalToOpen !== 0 ? 'nav-bar disabled' : 'nav-bar'">
+  <div class="nav-bar__logo-wrapper">
+    <img
+      src="../assets/logoImage.svg"
+      alt="LOGO"
+      class="nav-bar__logo-wrapper__image"
+    />
+    <h1>Employee Manager</h1>
+  </div>
+
+  <div class="nav-bar__links">
+    <span (click)="handleModalToOpen(1)">Add employee</span>
+    <form>
+      <input
+        type="search"
+        (ngModelChange)="searchEmployees(key.value)"
+        #key="ngModel"
+        ngModel
+        name="key"
+        placeholder="Search employees..."
+        required
+      />
+    </form>
+  </div>
+
+  <div class="nav-bar__hamburger" (click)="handleHamburgerClick()">
+    <div
+      [ngClass]="
+        hamburgerClicked
+          ? 'nav-bar__hamburger--line1 toggle'
+          : 'nav-bar__hamburger--line1'
+      "
+    ></div>
+    <div
+      [ngClass]="
+        hamburgerClicked
+          ? 'nav-bar__hamburger--line2 toggle'
+          : 'nav-bar__hamburger--line2'
+      "
+    ></div>
+    <div
+      [ngClass]="
+        hamburgerClicked
+          ? 'nav-bar__hamburger--line3 toggle'
+          : 'nav-bar__hamburger--line3'
+      "
+    ></div>
+  </div>
+  <div
+    [ngClass]="
+      hamburgerClicked
+        ? 'nav-bar__links--phone toggle'
+        : 'nav-bar__links--phone'
+    "
+  >
+    <span>Add employee</span>
+    <form>
+      <input type="search" placeholder="Search employees..." required />
+    </form>
+  </div>
+</nav>
+<div
+  [ngClass]="modalToOpen !== 0 ? 'employee-cards disabled' : 'employee-cards'"
+>
+  <div class="employee-cards__card" *ngFor="let employee of employees">
+    <div class="employee-cards__card__first">
+      <div [ngStyle]="{ width: '50%' }">
+        <img
+          src="{{ employee?.imageUrl }}"
+          alt="user-image"
+          id="profile-image"
+        />
+      </div>
+      <div class="employee-cards__card--name">
+        <h2>{{ employee?.name }}</h2>
+        <p>{{ employee?.jobTitle }}</p>
+      </div>
+    </div>
+    <div class="employee-cards__card__second">{{ employee?.email }}</div>
+    <div class="employee-cards__card__third">{{ employee?.phone }}</div>
+    <div class="employee-cards__card__fourth">
+      <img src="../assets/edit.svg" (click)="handleModalToOpen(2, employee)" />
+      <img src="../assets/remove.svg" (click)="onDeleteEmloyee(employee.id)" />
+    </div>
+  </div>
+</div>
+<div [ngClass]="modalToOpen === 1 ? 'add-modal active' : 'add-modal'">
+  <form #addForm="ngForm" (ngSubmit)="onAddEmloyee(addForm)">
+    <div class="form-text-field">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        ngModel
+        id="name"
+        name="name"
+        required
+        placeholder="Name"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        ngModel
+        id="email"
+        name="email"
+        required
+        placeholder="Email"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="jobTitle">Job Title</label>
+      <input
+        type="text"
+        ngModel
+        id="jobTitle"
+        name="jobTitle"
+        required
+        placeholder="Job Title"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="phone">Phone</label>
+      <input
+        type="text"
+        ngModel
+        id="phone"
+        name="phone"
+        required
+        placeholder="Phone"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="imageUrl">Image URL</label>
+      <input
+        type="text"
+        ngModel
+        id="imageUrl"
+        name="imageUrl"
+        required
+        placeholder="Image URL"
+      />
+    </div>
+    <div class="form-buttons">
+      <button class="btn-primary" [disabled]="addForm.invalid" type="submit">
+        Add
+      </button>
+      <button type="button" class="btn-danger" (click)="handleModalClose()">
+        Close
+      </button>
+    </div>
+  </form>
+</div>
+<div [ngClass]="modalToOpen === 2 ? 'add-modal active' : 'add-modal'">
+  <form #editForm="ngForm">
+    <div class="form-text-field">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        ngModel="{{ editEmployee?.name }}"
+        id="name"
+        name="name"
+        required
+        placeholder="Name"
+      />
+    </div>
+    <input
+      type="hidden"
+      ngModel="{{ editEmployee?.id }}"
+      name="id"
+      class="form-control"
+      id="id"
+      placeholder="Email"
+    />
+    <input
+      type="hidden"
+      ngModel="{{ editEmployee?.employeeCode }}"
+      name="userCode"
+      class="form-control"
+      id="userCode"
+      placeholder="Email"
+    />
+    <div class="form-text-field">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        ngModel="{{ editEmployee?.email }}"
+        id="email"
+        name="email"
+        required
+        placeholder="Email"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="jobTitle">Job Title</label>
+      <input
+        type="text"
+        ngModel="{{ editEmployee?.jobTitle }}"
+        id="jobTitle"
+        name="jobTitle"
+        required
+        placeholder="Job Title"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="phone">Phone</label>
+      <input
+        type="text"
+        ngModel="{{ editEmployee?.phone }}"
+        id="phone"
+        name="phone"
+        required
+        placeholder="Phone"
+      />
+    </div>
+    <div class="form-text-field">
+      <label for="imageUrl">Image URL</label>
+      <input
+        type="text"
+        ngModel="{{ editEmployee?.imageUrl }}"
+        id="imageUrl"
+        name="imageUrl"
+        required
+        placeholder="Image URL"
+      />
+    </div>
+    <div class="form-buttons">
+      <button
+        class="btn-primary"
+        [disabled]="editForm.invalid"
+        type="submit"
+        (click)="onUpdateEmloyee(editForm.value)"
+      >
+        Update
+      </button>
+      <button type="button" class="btn-danger" (click)="handleModalClose()">
+        Close
+      </button>
+    </div>
+  </form>
+</div>
